@@ -67,10 +67,11 @@ class HomePageController extends Controller
         ]);
         Comment::create([
             'content'=> $request->content,
-            'user_id'=> $request->user_id,
+            'user_id'=> auth()->user()->id,
             'post_id'=> $request->post_id,
         ]);
-        $ReturnData = array("ResponseCode" => 1, "ErrorDetails" => "");
+        $ReturnData = array("ResponseCode" => 1, "ErrorDetails" => "",
+           "content"=>$request->content,"user_id" => $request->user_id,"post_id"=>$request->post_id);
         return response()->json($ReturnData);
  
     }

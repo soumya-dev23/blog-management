@@ -81,6 +81,34 @@
       
                     <center>
 
+                       <div>
+                            <form method="POST" action="{{ url('homepage') }}" accept-charset="UTF-8" enctype="multipart/form-data">
+                                {{ csrf_field() }}
+                                    <div class="form-group">
+                                        <label for="title" class="mb-2">Sort By Date:</label>
+                                        <select class="form-control" name="sort_by_date" id="sort_by_date">
+                                            <option value="asc" {{ $sort_by_date == 'asc' ? 'selected' : '' }}> Old -- New </option>
+                                            <option value="desc" {{ $sort_by_date == 'desc' ? 'selected' : '' }}> New -- Old </option>
+                                        </select>
+                                        <br>
+                                        <label for="published_at" class="mb-2">Filter By Author</label>
+                                        <select class="form-control" name="author_id" id="author_id">
+                                        <option value="" hidden>-- Select author -- </option>
+                                            @foreach($authors as $author)
+                                            <option value="{{$author->id}}" {{ $author->id == $author_id ? 'selected' : '' }}> {{$author->name}} </option>
+                                            @endforeach
+                                        </select>
+                                        
+                                    </div>
+                                    <br>
+                                    <div class="row align-right mt-2">
+                                        <div class="form-group" style="margin-top: 20px">
+                                            <input class="btn btn-primary button-hover" type="submit" value="Filter">
+                                        </div> 
+                                    </div>
+                            </form>
+                       </div>
+
                         @if (count($posts) > 0)
 
                         @foreach ($posts as $post)

@@ -26,12 +26,31 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::latest('id')->paginate(4);
+        //dd($request);
+    
+        $authors = User::has('posts')->get();
 
+        // Prepare Data
+        $author_id = '';
+        $sort_by_date = '';
+        $posts = Post::where('title', '!=', '');
+        if ($request->exists('author_id')) {
+            $posts = Post::where('user_id', $request->author_id);
+            $author_id = $request->author_id; 
+        }
+        if ($request->exists('sort_by_date')) {
+            //dd($request->sort_by_date);
+            $posts = $posts->orderBy('published_at',$request->sort_by_date);
+            $sort_by_date = $request->sort_by_date; 
+        }
+
+        $posts = $posts->paginate(4);
+        //dd($posts);
+        
         return view('layouts.homepage', compact(
-            'posts',
+            'posts','authors','author_id','sort_by_date'
         ));
     }
 
@@ -40,17 +59,7 @@ class HomeController extends Controller
         return redirect('/homepage');
     }
 
-    public function contact() {
-        return view('pages.contact_page');
-    }
 
-    public function about() {
-        $users = User::all();
-
-        return view('pages.about_page', compact(
-            'users',
-        ));
-    }
 
     public function profile() {
         $users = User::count();
